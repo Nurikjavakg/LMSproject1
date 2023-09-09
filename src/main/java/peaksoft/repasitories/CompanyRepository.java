@@ -7,7 +7,7 @@ import peaksoft.dto.company.CompanyResponse;
 import peaksoft.dto.company.CompanyResponseInfo;
 import peaksoft.entities.Company;
 
-import java.time.ZonedDateTime;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -35,7 +35,7 @@ public interface CompanyRepository extends JpaRepository<Company, Long> {
      @Query("select gr.groupName from Company co join co.courseList c join c.groupList gr where gr.id= :groupName")
      List<String>groupName(Long groupName);
 
-     @Query("select i.firstName, i.lastName from Company co join co.instructorList i where i.id= :instructorId")
+     @Query("select i.firstName, i.lastName from Company co join co.instructors i where i.id= :instructorId")
     List<String>instructorName(Long instructorId);
 
 

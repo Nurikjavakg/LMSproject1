@@ -2,14 +2,16 @@ package peaksoft.api;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import peaksoft.dto.company.CompanyRequest;
 import peaksoft.dto.company.CompanyResponse;
 import peaksoft.dto.company.CompanyResponseInfo;
 import peaksoft.dto.simple.SimpleResponse;
-import peaksoft.entities.Company;
+
 import peaksoft.services.CompanyService;
-import peaksoft.services.StudentService;
+
 
 import java.util.List;
 
@@ -19,12 +21,14 @@ import java.util.List;
 public class CompanyApi {
     private final CompanyService companyService;
 
+
     @GetMapping
     public List<CompanyResponse> companies() {
         return companyService.getAllCompany();
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('ADMIN')")
     public SimpleResponse saveCompany(@RequestBody CompanyRequest companyRequest) {
         companyService.saveCompany(companyRequest);
         return SimpleResponse.builder()

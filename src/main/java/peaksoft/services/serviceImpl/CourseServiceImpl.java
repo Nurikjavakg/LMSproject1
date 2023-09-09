@@ -10,6 +10,7 @@ import peaksoft.dto.course.CourseResponse;
 import peaksoft.dto.simple.SimpleResponse;
 import peaksoft.entities.Company;
 import peaksoft.entities.Course;
+
 import peaksoft.entities.Instructor;
 import peaksoft.exception.InvalidNameException;
 import peaksoft.exception.NotFoundException;
@@ -108,9 +109,9 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public List<CourseResponse> sortByDate(Long companyId) {
         Company company = companyRepository.findById(companyId).orElseThrow( ()-> new NotFoundException("not found Company"));
-        courseRepository.sortByDate(companyId);
+        return  courseRepository.sortByDate(companyId);
 
-        return ;
+
     }
 
 

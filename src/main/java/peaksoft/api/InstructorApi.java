@@ -2,6 +2,7 @@ package peaksoft.api;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import peaksoft.dto.course.CourseRequest;
 import peaksoft.dto.instructor.InstructorRequest;
@@ -11,6 +12,7 @@ import peaksoft.dto.instructor.InstructorResponseInfo;
 import peaksoft.dto.simple.SimpleResponse;
 import peaksoft.services.InstructorService;
 
+import java.nio.file.Path;
 import java.util.List;
 
 @RestController
@@ -24,14 +26,16 @@ public class InstructorApi {
         return instructorService.getAllInstructors(companyId);
     }
 
-    @PostMapping("/{companyId}")
-    public SimpleResponse saveInstructor(@PathVariable Long companyId, @RequestBody InstructorRequest instructorRequest) {
-        instructorService.saveInstructor(companyId, instructorRequest);
+    @PostMapping("/{companyId}/{instructorId}")
+    public SimpleResponse assignInstructor(@PathVariable Long companyId,@PathVariable Long instructorId){
+        instructorService.assign(companyId,instructorId);
         return SimpleResponse.builder()
                 .httpStatus(HttpStatus.OK)
-                .message("Instructor is saved")
+                .message("Instructor is assigned to company...")
                 .build();
     }
+
+
 
     @GetMapping("/get/{instructorId}")
     public InstructorResponse getCourseById(@PathVariable Long instructorId) {

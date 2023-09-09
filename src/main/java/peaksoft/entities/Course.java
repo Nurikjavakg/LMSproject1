@@ -3,7 +3,7 @@ package peaksoft.entities;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
+
 
 import java.time.LocalDate;
 import java.util.List;
@@ -12,7 +12,6 @@ import java.util.List;
 @Table(name = "course")
 @Getter
 @Setter
-@ToString
 public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

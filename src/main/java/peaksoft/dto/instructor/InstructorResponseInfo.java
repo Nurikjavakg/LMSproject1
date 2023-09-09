@@ -7,21 +7,22 @@ import lombok.Setter;
 @Getter
 public class InstructorResponseInfo {
 
-    private Long id;
-    private String firstName;
-    private String lastName;
-    private Long phoneNumber;
-    private String specialization;
-    private String groupName;
-    private int studentCount;
+        private Long id;
+        private String firstName;
+        private String lastName;
+        private String phoneNumber;
+        private String specialization;
 
-    public InstructorResponseInfo(Long id, String firstName, String lastName, Long phoneNumber, String specialization, String groupName, int studentCount) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.phoneNumber = phoneNumber;
-        this.specialization = specialization;
-        this.groupName = groupName;
-        this.studentCount = studentCount;
+        public InstructorResponseInfo(Long id, String firstName, String lastName, String phoneNumber, String specialization) {
+            this.id = id;
+            this.firstName = firstName;
+            this.lastName = lastName;
+            this.phoneNumber = phoneNumber;
+            this.specialization = specialization;
+        }
+
+        // Getters and setters
     }
-}
+
+
+

@@ -1,84 +1,39 @@
 package peaksoft.entities;
-
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
+import java.time.LocalDate;
 import java.util.List;
-
+import static jakarta.persistence.CascadeType.*;
+import static jakarta.persistence.CascadeType.MERGE;
 @Entity
-@Table(name = "instructor")
+@Table(name = "instructors")
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
-@ToString
 public class Instructor {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "instructor_gen")
+    @SequenceGenerator(
+            name = "instructor_gen",
+            sequenceName = "instructor_seq",
+            allocationSize = 1)
     private Long id;
     private String firstName;
     private String lastName;
-    private Long phoneNumber;
+    private String phoneNumber;
     private String specialization;
-    @ManyToMany(mappedBy = "instructorList",cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.REFRESH})
+    private LocalDate createdAt;
+    @OneToOne(cascade = ALL)
+    private User user;
+    @ManyToMany(mappedBy = "instructors", cascade = {PERSIST, DETACH, REFRESH, MERGE})
     private List<Company> companies;
-    @OneToMany(mappedBy = "instructor",cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.REFRESH,CascadeType.REMOVE})
-    private List<Course>courseList;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public Long getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(Long phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public String getSpecialization() {
-        return specialization;
-    }
-
-    public void setSpecialization(String specialization) {
-        this.specialization = specialization;
-    }
-
-    public List<Company> getCompanies() {
-        return companies;
-    }
-
-    public void setCompanies(List<Company> companies) {
-        this.companies = companies;
-    }
-
-    public List<Course> getCourseList() {
-        return courseList;
-    }
-
-    public void setCourseList(List<Course> courseList) {
-        this.courseList = courseList;
-    }
+    @OneToMany(mappedBy = "instructor", cascade = ALL)
+    private List<Course> courses;
 }

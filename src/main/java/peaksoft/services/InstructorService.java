@@ -1,7 +1,6 @@
 package peaksoft.services;
 
-import peaksoft.dto.course.CourseRequest;
-import peaksoft.dto.course.CourseResponse;
+
 import peaksoft.dto.instructor.InstructorRequest;
 import peaksoft.dto.instructor.InstructorResponse;
 import peaksoft.dto.instructor.InstructorResponseGetStudents;
@@ -12,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface InstructorService {
-    SimpleResponse saveInstructor(Long companyId, InstructorRequest instructorRequest);
+    SimpleResponse assign(Long companyId, Long instructorId);
     List<InstructorResponse> getAllInstructors(Long companyId);
     InstructorResponse getInstructorById(Long instructorId);
     SimpleResponse updateInstructor(Long companyId,Long instructorId, InstructorRequest instructorRequest);

@@ -70,10 +70,7 @@ public class LessonServiceImpl implements LessonService {
     public SimpleResponse updateLesson(Long courseId, Long lessonId, LessonRequest lessonRequest) {
             Course course = courseRepository.findById(courseId).orElseThrow(() -> new NotFoundException("Course with id:" + courseId + " not found"));
             Lesson lesson = lessonRepository.findById(lessonId).orElseThrow(() -> new NotFoundException("Lesson with id:" + lessonId + " not found"));
-            List<Course> course1 = new ArrayList<>();
-            course1.add(course);
             lesson.setCourse(course);
-
             lesson.setLessonName(lessonRequest.getLessonName());
             lessonRepository.save(lesson);
             return SimpleResponse.builder()

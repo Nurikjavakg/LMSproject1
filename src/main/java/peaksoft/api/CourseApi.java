@@ -3,6 +3,7 @@ package peaksoft.api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import peaksoft.dto.course.CourseRequest;
 import peaksoft.dto.course.CourseResponse;
@@ -23,12 +24,10 @@ public class CourseApi {
     }
 
     @PostMapping("/{companyId}")
+    @PreAuthorize("hasAnyAuthority('ADMIN','ISTRUCTOR')")
     public SimpleResponse saveCourse(@PathVariable Long companyId, @RequestBody CourseRequest courseRequest) {
-        courseService.saveCourse(companyId, courseRequest);
-        return SimpleResponse.builder()
-                .httpStatus(HttpStatus.OK)
-                .message("Course is saved")
-                .build();
+        return  courseService.saveCourse(companyId, courseRequest);
+
     }
 
     @GetMapping("/get/{courseId}")

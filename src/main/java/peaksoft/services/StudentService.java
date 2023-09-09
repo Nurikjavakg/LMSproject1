@@ -1,7 +1,7 @@
 package peaksoft.services;
 
-import peaksoft.dto.lesson.LessonRequest;
-import peaksoft.dto.lesson.LessonResponse;
+
+
 import peaksoft.dto.simple.SimpleResponse;
 import peaksoft.dto.student.StudentRequest;
 import peaksoft.dto.student.StudentResponse;

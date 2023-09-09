@@ -23,51 +23,54 @@ import java.util.Objects;
 @Transactional
 @RequiredArgsConstructor
 public class StudentServiceImpl implements StudentService {
-    private final StudentRepository studentRepository;
-    private final GroupRepository groupRepository;
+//    private final StudentRepository studentRepository;
+//    private final GroupRepository groupRepository;
     @Override
     public SimpleResponse saveStudent(Long groupId, StudentRequest studentRequest) {
-        Group group = groupRepository.findById(groupId).orElseThrow(() -> new NotFoundException("Course with id:" + groupId + " not found..."));
-        Student studentEmail = studentRepository.findByEmail(studentRequest.getEmail());
-        if (studentEmail == null) {
-            Student student = new Student();
-            student.setFirstName(studentRequest.getFirstName());
-            student.setLastName(studentRequest.getLastName());
-            student.setEmail(studentRequest.getEmail());
-            student.setPhoneNumber(studentRequest.getPhoneNumber());
-            student.setStudyFormat(studentRequest.getStudyFormat());
-            student.setGroup(group);
-            studentRepository.save(student);
-
-            return SimpleResponse.builder()
-                    .httpStatus(HttpStatus.OK)
-                    .message("Student is saved")
-                    .build();
-        } else {
-            throw new InvalidEmailException("Lesson with email:" + studentEmail + " exists, try with another name...");
-        }
+//        Group group = groupRepository.findById(groupId).orElseThrow(() -> new NotFoundException("Course with id:" + groupId + " not found..."));
+//        Student studentEmail = studentRepository.findByEmail(studentRequest.getEmail());
+//        if (studentEmail == null) {
+//            Student student = new Student();
+//            student.setFirstName(studentRequest.getFirstName());
+//            student.setLastName(studentRequest.getLastName());
+//            student.setEmail(studentRequest.getEmail());
+//            student.setPhoneNumber(studentRequest.getPhoneNumber());
+//            student.setStudyFormat(studentRequest.getStudyFormat());
+//            student.setGroup(group);
+//            studentRepository.save(student);
+//
+//            return SimpleResponse.builder()
+//                    .httpStatus(HttpStatus.OK)
+//                    .message("Student is saved")
+//                    .build();
+//        } else {
+//            throw new InvalidEmailException("Lesson with email:" + studentEmail + " exists, try with another name...");
+//        }
+        return  null;
 
     }
 
 
     @Override
     public List<StudentResponse> getAllStudents(Long groupId) {
-        List<StudentResponse> students = studentRepository.findAllStudentsById(groupId);
+//        List<StudentResponse> students = studentRepository.findAllStudentsById(groupId);
+//
+//        if (students.isEmpty()) {
+//            throw new NotFoundException("Company not found with id:"+groupId);
+//        }return students;
 
-        if (students.isEmpty()) {
-            throw new NotFoundException("Company not found with id:"+groupId);
-        }return students;
-
+        return  null;
     }
 
 
     @Override
     public StudentResponse getStudentId(Long studentId) {
-        StudentResponse studentResponse = studentRepository.findStudentById(studentId);
-        if (studentResponse == null) {
-            throw new NotFoundException("course with id:" + studentId + " not found...");
-        }
-        return studentResponse;
+//        StudentResponse studentResponse = studentRepository.findStudentById(studentId);
+//        if (studentResponse == null) {
+//            throw new NotFoundException("course with id:" + studentId + " not found...");
+//        }
+//        return studentResponse;
+        return  null;
     }
 
 
@@ -75,56 +78,61 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public SimpleResponse updateStudent(Long groupId, Long studentId, StudentRequest studentRequest) {
-        Group group = groupRepository.findById(groupId).orElseThrow(() -> new NotFoundException("Course with id:" + groupId + " not found"));
-        Student student = studentRepository.findById(studentId).orElseThrow(() -> new NotFoundException("Lesson with id:" + studentId + " not found"));
-        List<Group> groups= new ArrayList<>();
-        groups.add(group);
-        student.setGroup(group);
-
-        student.setFirstName(studentRequest.getFirstName());
-        student.setLastName(studentRequest.getLastName());
-        student.setPhoneNumber(studentRequest.getPhoneNumber());
-        student.setEmail(studentRequest.getEmail());
-
-        studentRepository.save(student);
-        return SimpleResponse.builder()
-                .httpStatus(HttpStatus.OK)
-                .message("Student is updated...")
-                .build();
+//        Group group = groupRepository.findById(groupId).orElseThrow(() -> new NotFoundException("Course with id:" + groupId + " not found"));
+//        Student student = studentRepository.findById(studentId).orElseThrow(() -> new NotFoundException("Lesson with id:" + studentId + " not found"));
+//        List<Group> groups= new ArrayList<>();
+//        groups.add(group);
+//        student.setGroup(group);
+//
+//        student.setFirstName(studentRequest.getFirstName());
+//        student.setLastName(studentRequest.getLastName());
+//        student.setPhoneNumber(studentRequest.getPhoneNumber());
+//        student.setEmail(studentRequest.getEmail());
+//
+//        studentRepository.save(student);
+//        return SimpleResponse.builder()
+//                .httpStatus(HttpStatus.OK)
+//                .message("Student is updated...")
+//                .build();
+        return  null;
     }
 
 
 
     @Override
     public SimpleResponse deleteStudent(Long groupId, Long studentId) {
-        Group group = groupRepository.findById(groupId).orElseThrow( ()-> new NotFoundException("Group with id:"+groupId+" not found..."));
-        Student student = studentRepository.findById(studentId).orElseThrow( ()-> new NotFoundException("Student with id:"+studentId+ "not found..."));
-        group.getStudentList().remove(student);
-        studentRepository.delete(student);
-        return SimpleResponse.builder()
-                .httpStatus(HttpStatus.OK)
-                .message("Student is deleted...")
-                .build();
+//        Group group = groupRepository.findById(groupId).orElseThrow( ()-> new NotFoundException("Group with id:"+groupId+" not found..."));
+//        Student student = studentRepository.findById(studentId).orElseThrow( ()-> new NotFoundException("Student with id:"+studentId+ "not found..."));
+//        group.getStudentList().remove(student);
+//        studentRepository.delete(student);
+//        return SimpleResponse.builder()
+//                .httpStatus(HttpStatus.OK)
+//                .message("Student is deleted...")
+//                .build();
+        return  null;
     }
 
     @Override
     public SimpleResponse blockStudent(Long studentId, Boolean isBlock) {
-        Student student = studentRepository.findById(studentId).orElseThrow(()-> new NotFoundException("Student with id:"+studentId+"not found"));
-        student.setIsBlocked(true);
-
-        return SimpleResponse.builder()
-                .httpStatus(HttpStatus.OK)
-                .message("Student is blocked...")
-                .build();
+//        Student student = studentRepository.findById(studentId).orElseThrow(()-> new NotFoundException("Student with id:"+studentId+"not found"));
+//        student.setIsBlocked(true);
+//
+//        return SimpleResponse.builder()
+//                .httpStatus(HttpStatus.OK)
+//                .message("Student is blocked...")
+//                .build();
+        return  null;
     }
 
     @Override
     public SimpleResponse anBlockStudent(Long studentId, Boolean anBlock) {
-        Student student = studentRepository.findById(studentId).orElseThrow(()-> new NotFoundException("Student with id:"+studentId+"not found"));
-        student.setIsBlocked(false);
-        return SimpleResponse.builder()
-                .httpStatus(HttpStatus.OK)
-                .message("Student is an blocked...")
-                .build();
+//        Student student = studentRepository.findById(studentId).orElseThrow(()-> new NotFoundException("Student with id:"+studentId+"not found"));
+//        student.setIsBlocked(false);
+//        return SimpleResponse.builder()
+//                .httpStatus(HttpStatus.OK)
+//                .message("Student is an blocked...")
+//                .build();
+        return  null;
+
     }
 }

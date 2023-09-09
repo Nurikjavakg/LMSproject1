@@ -12,7 +12,7 @@ import peaksoft.dto.simple.SimpleResponse;
 import peaksoft.entities.Company;
 import peaksoft.entities.Course;
 import peaksoft.entities.Group;
-import peaksoft.entities.Instructor;
+
 import peaksoft.exception.InvalidNameException;
 import peaksoft.exception.NotFoundException;
 import peaksoft.repasitories.CourseRepository;

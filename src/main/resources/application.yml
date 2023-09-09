@@ -4,12 +4,13 @@ spring:
     url: jdbc:postgresql://localhost:5432/LmsDataBase
     username: postgres
     password: 1234
-
+  jwt:
+    secret_key: java10
 
   jpa:
     hibernate:
       ddl-auto: update
-
-
 server:
   port: 9090
+  error:
+      include-message: always
