@@ -2,6 +2,7 @@ package peaksoft.api;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import peaksoft.dto.simple.SimpleResponse;
 import peaksoft.dto.task.TaskRequest;
@@ -19,13 +20,15 @@ public class TaskApi {
 
 
     @GetMapping("/{lessonId}")
+    @PreAuthorize("hasAnyAuthority('ADMIN','INSTRUCTOR','STUDENT')")
     public List<TaskResponse> getAllTasks(@PathVariable Long lessonId) {
         return taskService.getAllTask(lessonId);
     }
 
 
     @PostMapping("/{lessonId}")
-    public SimpleResponse saveCourse(@PathVariable Long lessonId, @RequestBody TaskRequest taskRequest) {
+    @PreAuthorize("hasAnyAuthority('INSTRUCTOR')")
+    public SimpleResponse saveTask(@PathVariable Long lessonId, @RequestBody TaskRequest taskRequest) {
         taskService.saveTask(lessonId, taskRequest);
         return SimpleResponse.builder()
                 .httpStatus(HttpStatus.OK)
@@ -34,13 +37,15 @@ public class TaskApi {
     }
 
     @GetMapping("/get/{taskId}")
-    public TaskResponse getCourseById(@PathVariable Long taskId) {
+    @PreAuthorize("hasAnyAuthority('ADMIN','INSTRUCTOR')")
+    public TaskResponse getTaskById(@PathVariable Long taskId) {
         return taskService.getTaskId(taskId);
     }
 
 
     @PutMapping("/{lessonId}/{taskId}")
-    public SimpleResponse updateCompany(@PathVariable Long lessonId, @PathVariable Long taskId, @RequestBody TaskRequest taskRequest) {
+    @PreAuthorize("hasAnyAuthority('INSTRUCTOR')")
+    public SimpleResponse updateTask(@PathVariable Long lessonId, @PathVariable Long taskId, @RequestBody TaskRequest taskRequest) {
         taskService.updateTask(lessonId, taskId, taskRequest);
         return SimpleResponse.builder()
                 .httpStatus(HttpStatus.OK)
@@ -49,6 +54,7 @@ public class TaskApi {
     }
 
     @DeleteMapping("/{lessonId}/{taskId}")
+    @PreAuthorize("hasAnyAuthority('ADMIN','INSTRUCTOR')")
     public SimpleResponse deleteTask(@PathVariable Long lessonId, @PathVariable Long taskId){
         taskService.deleteTask(lessonId,taskId);
         return SimpleResponse.builder()

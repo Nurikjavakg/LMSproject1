@@ -2,6 +2,7 @@ package peaksoft.api;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import peaksoft.dto.group.GroupRequest;
 import peaksoft.dto.group.GroupResponse;
@@ -22,12 +23,14 @@ public class GroupApi {
 
 
    @GetMapping("/{courseId}")
-    public List<GroupResponse> groupResponseList(@PathVariable Long courseId){
+   @PreAuthorize("hasAnyAuthority('ADMIN','INSTRUCTOR')")
+   public List<GroupResponse> groupResponseList(@PathVariable Long courseId){
     return groupService.getAllGroup(courseId);
 
     }
 
     @PostMapping("/{courseId}")
+    @PreAuthorize("hasAnyAuthority('ADMIN','INSTRUCTOR')")
     public SimpleResponse saveGroup(@PathVariable Long courseId, @RequestBody GroupRequest groupRequest){
         groupService.saveGroup(courseId,groupRequest);
         return SimpleResponse.builder()
@@ -37,7 +40,8 @@ public class GroupApi {
     }
 
     @GetMapping("/get/{groupId}")
-    public GroupResponse getCourseById(@PathVariable Long groupId) {
+    @PreAuthorize("hasAnyAuthority('ADMIN','INSTRUCTOR')")
+    public GroupResponse getGroupById(@PathVariable Long groupId) {
         return groupService.getGroupId(groupId);
     }
 
@@ -51,6 +55,7 @@ public class GroupApi {
         }
 
     @DeleteMapping("/{groupId}")
+    @PreAuthorize("hasAnyAuthority('ADMIN','INSTRUCTOR')")
     public SimpleResponse deleteGroup(@PathVariable Long groupId){
        groupService.deleteGroup(groupId);
        return SimpleResponse.builder()
@@ -60,6 +65,7 @@ public class GroupApi {
     }
 
     @GetMapping("/getGroupStudents/{groupId}")
+    @PreAuthorize("hasAnyAuthority('ADMIN','INSTRUCTOR')")
     public GroupResponseGetStudentCount getGroupStudents(@PathVariable Long groupId){
       return groupService.groupStudents(groupId);
     }

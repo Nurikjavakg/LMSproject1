@@ -19,18 +19,20 @@ public class CourseApi {
     private final CourseService courseService;
 
     @GetMapping("/{companyId}")
+    @PreAuthorize("hasAnyAuthority('ADMIN','INSTRUCTOR')")
     public List<CourseResponse> getAllCourse(@PathVariable Long companyId) {
         return courseService.getAllCourse(companyId);
     }
 
     @PostMapping("/{companyId}")
-    @PreAuthorize("hasAnyAuthority('ADMIN','ISTRUCTOR')")
+    @PreAuthorize("hasAnyAuthority('ADMIN','INSTRUCTOR')")
     public SimpleResponse saveCourse(@PathVariable Long companyId, @RequestBody CourseRequest courseRequest) {
         return  courseService.saveCourse(companyId, courseRequest);
 
     }
 
     @GetMapping("/get/{courseId}")
+    @PreAuthorize("hasAnyAuthority('ADMIN','INSTRUCTOR')")
     public CourseResponse getCourseById(@PathVariable Long courseId) {
         return courseService.getCourseId(courseId);
 
@@ -38,6 +40,7 @@ public class CourseApi {
     }
 
     @PostMapping("/{courseId}/{instructorId}")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public SimpleResponse assign(@PathVariable Long courseId,@PathVariable Long instructorId){
         courseService.assignInstructorToCourse(courseId,instructorId);
 
@@ -47,7 +50,8 @@ public class CourseApi {
               .build();
    }
     @PutMapping("/{companyId}/{courseId}")
-    public SimpleResponse updateCompany(@PathVariable Long companyId, @PathVariable Long courseId, @RequestBody CourseRequest courseRequest){
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    public SimpleResponse updateCourse(@PathVariable Long companyId, @PathVariable Long courseId, @RequestBody CourseRequest courseRequest){
         courseService.updateCourse(companyId,courseId,courseRequest);
         return SimpleResponse.builder()
                 .httpStatus(HttpStatus.OK)
@@ -57,7 +61,8 @@ public class CourseApi {
 
     }
     @DeleteMapping("/{companyId}/{courseId}")
-    public SimpleResponse deleteCompany(@PathVariable Long companyId,@PathVariable Long courseId){
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    public SimpleResponse deleteCourse(@PathVariable Long companyId,@PathVariable Long courseId){
         courseService.deleteCourse(companyId,courseId);
         return SimpleResponse.builder()
                 .httpStatus(HttpStatus.OK)

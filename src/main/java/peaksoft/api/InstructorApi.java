@@ -22,11 +22,13 @@ public class InstructorApi {
     private final InstructorService instructorService;
 
     @GetMapping("/{companyId}")
+    @PreAuthorize("hasAnyAuthority('ADMIN','INSTRUCTOR')")
     public List<InstructorResponse> getAllInstructor(@PathVariable Long companyId) {
         return instructorService.getAllInstructors(companyId);
     }
 
     @PostMapping("/{companyId}/{instructorId}")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public SimpleResponse assignInstructor(@PathVariable Long companyId,@PathVariable Long instructorId){
         instructorService.assign(companyId,instructorId);
         return SimpleResponse.builder()
@@ -38,11 +40,13 @@ public class InstructorApi {
 
 
     @GetMapping("/get/{instructorId}")
-    public InstructorResponse getCourseById(@PathVariable Long instructorId) {
+    @PreAuthorize("hasAnyAuthority('ADMIN','INSTRUCTOR')")
+    public InstructorResponse getInstructorById(@PathVariable Long instructorId) {
         return instructorService.getInstructorById(instructorId);
     }
 
     @PutMapping("/{companyId}/{instructorId}")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public SimpleResponse updateInstructor(@PathVariable Long companyId, @PathVariable Long instructorId, @RequestBody InstructorRequest instructorRequest) {
          instructorService.updateInstructor(companyId,instructorId,instructorRequest);
         return SimpleResponse.builder()
@@ -51,6 +55,7 @@ public class InstructorApi {
                 .build();
     }
     @DeleteMapping("/{companyId}/{instructorId}")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public SimpleResponse deleteInstructor(@PathVariable Long companyId,@PathVariable Long instructorId){
         instructorService.deleteInstructor(companyId,instructorId);
         return SimpleResponse.builder()
@@ -60,11 +65,13 @@ public class InstructorApi {
     }
 
     @GetMapping("/getCount/{instructorId}")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public InstructorResponseGetStudents getStudents(@PathVariable Long instructorId){
         return instructorService.getStudentCountFromInstructor(instructorId);
     }
 
     @GetMapping("/info/{instructorId}")
+    @PreAuthorize("hasAnyAuthority('ADMIN','INSTRUCTOR')")
     public InstructorResponseInfo getInstructorInfo(@PathVariable Long instructorId){
         return instructorService.getInstructorInfo(instructorId);
     }

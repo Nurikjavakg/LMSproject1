@@ -2,9 +2,8 @@ package peaksoft.api;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import peaksoft.dto.lesson.LessonRequest;
-import peaksoft.dto.lesson.LessonResponse;
 import peaksoft.dto.simple.SimpleResponse;
 import peaksoft.dto.student.StudentRequest;
 import peaksoft.dto.student.StudentResponse;
@@ -20,27 +19,38 @@ public class StudentApi {
 
 
     @GetMapping("/{groupId}")
-    public List<StudentResponse> getAllLessons(@PathVariable Long groupId) {
+    @PreAuthorize("hasAnyAuthority('ADMIN','INSTRUCTOR')")
+    public List<StudentResponse> getAllStudents(@PathVariable Long groupId) {
         return studentService.getAllStudents(groupId);
     }
 
 
-    @PostMapping("/{groupId}")
-    public SimpleResponse saveLesson(@PathVariable Long groupId, @RequestBody StudentRequest studentRequest) {
-        studentService.saveStudent(groupId, studentRequest);
+
+    @PostMapping("/{groupId}/{studentId}")
+    @PreAuthorize("hasAnyAuthority('ADMIN','INSTRUCTOR')")
+    public SimpleResponse assignStudent(@PathVariable Long groupId, @PathVariable Long studentId) {
+        studentService.assign(groupId, studentId);
         return SimpleResponse.builder()
                 .httpStatus(HttpStatus.OK)
-                .message("Student is saved")
+                .message("Student is assigned to group...")
                 .build();
     }
 
+    @GetMapping("/{companyId}/studyFormat")
+    public List<StudentResponse>filter(@PathVariable Long companyId, @RequestParam String studyFormat){
+       return studentService.getAllOnlineOrOfflineStudents(companyId,studyFormat);
+    }
+
+
     @GetMapping("/get/{studentId}")
-    public StudentResponse getCourseById(@PathVariable Long studentId) {
+    @PreAuthorize("hasAnyAuthority('ADMIN','INSTRUCTOR')")
+    public StudentResponse getStudentById(@PathVariable Long studentId) {
         return studentService.getStudentId(studentId);
 
     }
 
     @PutMapping("/{groupId}/{studentId}")
+    @PreAuthorize("hasAnyAuthority('INSTRUCTOR')")
     public SimpleResponse updateLesson(@PathVariable Long groupId, @PathVariable Long studentId, @RequestBody StudentRequest studentRequest) {
         studentService.updateStudent(groupId, studentId, studentRequest);
         return SimpleResponse.builder()
@@ -52,6 +62,7 @@ public class StudentApi {
     }
 
     @DeleteMapping("/{groupId}/{studentId}")
+    @PreAuthorize("hasAnyAuthority('ADMIN','INSTRUCTOR')")
     public SimpleResponse deleteStudent(@PathVariable Long groupId, @PathVariable Long studentId) {
         studentService.deleteStudent(groupId, studentId);
         return SimpleResponse.builder()
@@ -61,6 +72,7 @@ public class StudentApi {
     }
 
     @PutMapping("/blocked/{studentId}")
+    @PreAuthorize("hasAnyAuthority('ADMIN','INSTRUCTOR')")
     public SimpleResponse block(@PathVariable Long studentId, Boolean isBlocked) {
         studentService.blockStudent(studentId, isBlocked);
         return SimpleResponse.builder()
@@ -70,6 +82,7 @@ public class StudentApi {
     }
 
     @PutMapping("/anBlocked/{studentId}")
+    @PreAuthorize("hasAnyAuthority('ADMIN','INSTRUCTOR')")
     public SimpleResponse anBlock(@PathVariable Long studentId, Boolean anBlocked) {
         studentService.anBlockStudent(studentId, anBlocked);
         return SimpleResponse.builder()

@@ -1,5 +1,6 @@
 package peaksoft.services;
 
+import org.springframework.stereotype.Service;
 import peaksoft.dto.admin.*;
 import peaksoft.dto.simple.SimpleResponse;
 

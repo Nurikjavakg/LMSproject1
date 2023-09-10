@@ -1,19 +1,19 @@
 package peaksoft.repasitories;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import peaksoft.dto.company.CompanyResponse;
 import peaksoft.dto.company.CompanyResponseInfo;
 import peaksoft.entities.Company;
-
 
 import java.util.List;
 import java.util.Optional;
 
 public interface CompanyRepository extends JpaRepository<Company, Long> {
     @Query("select new peaksoft.dto.company.CompanyResponse(c.id,c.name,c.country,c.address,c.phoneNumber,c.createdAt,c.updatedAt)from Company c")
-    List<CompanyResponse> getAllCompanies();
+    Page<CompanyResponse> getAllCompanies(Pageable pageable);
 
     @Query("select new peaksoft.dto.company.CompanyResponse(c.id,c.name,c.country,c.address,c.phoneNumber,c.createdAt,c.updatedAt)from Company c where c.id=:id")
     Optional<CompanyResponse> getCompaniesBy(Long id);
@@ -27,18 +27,17 @@ public interface CompanyRepository extends JpaRepository<Company, Long> {
             """)
     Optional<CompanyResponseInfo> getCompanyInfo(Long companyId);
 
-    @Query("select cast(count (s) as int)from Company co join co.courseList c join c.groupList gr join gr.studentList s where s.id= :studentId")
-     int countStudent(Long studentId);
-     @Query("select c.courseName from Company co join co.courseList c where c.id= :courseId")
-    List<String>courseName(Long courseId);
+    @Query("select cast(count (s) as int)from Company co join co.courseList c join c.groupList gr join gr.studentList s where c.id= :courseId")
+    int countStudent(Long courseId);
 
-     @Query("select gr.groupName from Company co join co.courseList c join c.groupList gr where gr.id= :groupName")
-     List<String>groupName(Long groupName);
+    @Query("select c.courseName from Company co join co.courseList c where c.id= :courseId")
+    List<String> courseName(Long courseId);
 
-     @Query("select i.firstName, i.lastName from Company co join co.instructors i where i.id= :instructorId")
-    List<String>instructorName(Long instructorId);
+    @Query("select distinct gr.groupName from Company co join co.courseList c join c.groupList gr where c.id = :courseId")
+    List<String> groupName(Long courseId);
 
-
+    @Query("select distinct i.firstName from Company co join co.instructors i where co.id= :companyId")
+    List<String> instructorName(Long companyId);
 
 
 }

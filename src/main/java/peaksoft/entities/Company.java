@@ -20,7 +20,7 @@ public class Company {
     private String name;
     private String country;
     private String address;
-    private Long phoneNumber;
+    private String phoneNumber;
     private ZonedDateTime createdAt;
     private ZonedDateTime updatedAt;
     @ManyToMany(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.REFRESH})

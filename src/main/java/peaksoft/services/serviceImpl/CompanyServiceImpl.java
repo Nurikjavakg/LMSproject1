@@ -2,19 +2,22 @@ package peaksoft.services.serviceImpl;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import peaksoft.dto.company.CompanyRequest;
 import peaksoft.dto.company.CompanyResponse;
 import peaksoft.dto.company.CompanyResponseInfo;
+import peaksoft.dto.company.PaginationResponse;
 import peaksoft.dto.simple.SimpleResponse;
 import peaksoft.entities.Company;
 import peaksoft.exception.InvalidNameException;
 import peaksoft.exception.NotFoundException;
 import peaksoft.repasitories.CompanyRepository;
-import peaksoft.repasitories.CourseRepository;
-import peaksoft.repasitories.GroupRepository;
-import peaksoft.repasitories.InstructorRepository;
 import peaksoft.services.CompanyService;
 
 import java.time.ZonedDateTime;
@@ -24,15 +27,20 @@ import java.util.NoSuchElementException;
 @Service
 @Transactional
 @RequiredArgsConstructor
+@Slf4j
 public class CompanyServiceImpl implements CompanyService {
     private final CompanyRepository companyRepository;
-    private final InstructorRepository instructorRepository;
-    private final CourseRepository courseRepository;
-    private final GroupRepository groupRepository;
+
 
     @Override
-    public List<CompanyResponse> getAllCompany() {
-        return companyRepository.getAllCompanies();
+    public PaginationResponse getAllCompany( int currentPage, int pageSize) {
+        Pageable pageable = PageRequest.of(currentPage-1, pageSize);
+        Page<CompanyResponse> getAllCompanies = companyRepository.getAllCompanies(pageable);
+        return PaginationResponse.builder()
+                .companies(getAllCompanies.getContent())
+                .currentPage(getAllCompanies.getNumber()+1)
+                .pageSize(getAllCompanies.getTotalPages())
+                .build();
     }
 
     @Override
@@ -50,23 +58,35 @@ public class CompanyServiceImpl implements CompanyService {
 
 
             companyRepository.save(company);
+            String message = String.format("Company with id: %s successfully", company.getId() + "saved...");
+            log.info(message);
             return SimpleResponse.builder()
                     .httpStatus(HttpStatus.OK)
-                    .message(String.format("Company with id: %s successfully", company.getId()))
+                    .message(message)
                     .build();
         } else {
+            log.info(String.format("Company with name: %s exists", companyRequest.getName()));
             throw new InvalidNameException(String.format("Company with name: %s exists", companyRequest.getName()));
+
         }
+
     }
+
     @Override
     public CompanyResponse getCompanyByID(Long id) {
-        return companyRepository.getCompaniesBy(id).orElseThrow(()-> new NoSuchElementException("not found Company..."));
+        log.info("Company with id:" + id.toString() + " found...");
+        return companyRepository.getCompaniesBy(id)
+                .orElseThrow(() -> {
+                    String message = "not found Company...";
+                    log.error(message);
+                    return new NotFoundException(message);
+                });
     }
 
     @Override
     public SimpleResponse updateCompany(Long companyId, CompanyRequest companyRequest) {
         Company company = companyRepository.findById(companyId)
-                .orElseThrow( ()-> new NoSuchElementException("company not found..."));
+                .orElseThrow(() -> new NoSuchElementException("company not found..."));
 
         company.setName(companyRequest.getName());
         company.setCountry(companyRequest.getCountry());
@@ -77,13 +97,13 @@ public class CompanyServiceImpl implements CompanyService {
         companyRepository.save(company);
         return SimpleResponse.builder()
                 .httpStatus(HttpStatus.OK)
-                .message(String.format("Company with id: %s successfully updated",company.getId()))
+                .message(String.format("Company with id: %s successfully updated", company.getId()))
                 .build();
     }
 
     @Override
     public SimpleResponse deleteCompany(Long id) {
-        Company company = companyRepository.findById(id).orElseThrow( ()-> new NotFoundException("Company with id:"+id+"not found..."));
+        Company company = companyRepository.findById(id).orElseThrow(() -> new NotFoundException("Company with id:" + id + "not found..."));
         companyRepository.delete(company);
         return SimpleResponse.builder()
                 .httpStatus(HttpStatus.OK)
@@ -93,7 +113,8 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public CompanyResponseInfo getCompanyInfo(Long companyId) {
-        CompanyResponseInfo companyInfo = companyRepository.getCompanyInfo(companyId).orElseThrow(()-> new NotFoundException("not found"));
+        CompanyResponseInfo companyInfo = companyRepository.getCompanyInfo(companyId)
+                .orElseThrow(() -> new NotFoundException("not found"));
 
         List<String> courseName = companyRepository.courseName(companyId);
         List<String> groupName = companyRepository.groupName(companyId);
@@ -104,22 +125,9 @@ public class CompanyServiceImpl implements CompanyService {
         companyInfo.setGroupName(groupName);
         companyInfo.setInstructorName(instructorName);
         companyInfo.setStudentCount(countStudent);
+        return companyInfo;
 
-        return new CompanyResponseInfo(
-                companyInfo.getId(),
-                companyInfo.getName(),
-                companyInfo.getCountry(),
-                companyInfo.getAddress(),
-                companyInfo.getPhoneNumber(),
-                companyInfo.getCreatedAt(),
-                companyInfo.getUpdatedAt(),
-
-                companyInfo.getCourseName(),
-                companyInfo.getGroupName(),
-                companyInfo.getInstructorName(),
-                companyInfo.getStudentCount()
-
-        );
-    } }
+    }
+}
 
 

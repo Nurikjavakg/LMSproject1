@@ -7,12 +7,9 @@ import org.springframework.stereotype.Service;
 import peaksoft.dto.group.GroupRequest;
 import peaksoft.dto.group.GroupResponse;
 import peaksoft.dto.group.GroupResponseGetStudentCount;
-import peaksoft.dto.instructor.InstructorResponse;
 import peaksoft.dto.simple.SimpleResponse;
-import peaksoft.entities.Company;
 import peaksoft.entities.Course;
 import peaksoft.entities.Group;
-
 import peaksoft.exception.InvalidNameException;
 import peaksoft.exception.NotFoundException;
 import peaksoft.repasitories.CourseRepository;
@@ -21,12 +18,14 @@ import peaksoft.services.GroupService;
 
 import java.util.ArrayList;
 import java.util.List;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class GroupServiceImpl implements GroupService {
     private final GroupRepository groupRepository;
     private final CourseRepository courseRepository;
+
     @Override
     public SimpleResponse saveGroup(Long courseId, GroupRequest groupRequest) {
         Course course = courseRepository.findById(courseId).orElseThrow(() -> new NotFoundException("Course with id:" + courseId + " not found"));
@@ -43,7 +42,7 @@ public class GroupServiceImpl implements GroupService {
                     .message("Course is saved")
                     .build();
         } else {
-            throw new InvalidNameException("Group with name:"+groupName+"exist");
+            throw new InvalidNameException("Group with name:" + groupName + "exist");
         }
     }
 
@@ -56,11 +55,12 @@ public class GroupServiceImpl implements GroupService {
             return groups;
         }
     }
+
     @Override
     public GroupResponse getGroupId(Long groupId) {
         GroupResponse groupResponse = groupRepository.getGroupsById(groupId);
-        if(groupResponse == null){
-            throw new NotFoundException("course with id:"+groupId+" not found...");
+        if (groupResponse == null) {
+            throw new NotFoundException("course with id:" + groupId + " not found...");
         }
         return groupResponse;
     }
@@ -86,7 +86,7 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public SimpleResponse deleteGroup(Long groupId) {
-        Group group = groupRepository.findById(groupId).orElseThrow( ()-> new NotFoundException("Group with id:"+groupId+" not found..."));
+        Group group = groupRepository.findById(groupId).orElseThrow(() -> new NotFoundException("Group with id:" + groupId + " not found..."));
         groupRepository.delete(group);
         return SimpleResponse.builder()
                 .httpStatus(HttpStatus.OK)
@@ -96,7 +96,7 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public GroupResponseGetStudentCount groupStudents(Long groupId) {
-        return groupRepository.getGroupsStudent(groupId).orElseThrow( ()-> new NotFoundException("Not found group with id:"+groupId));
+        return groupRepository.getGroupsStudent(groupId).orElseThrow(() -> new NotFoundException("Not found group with id:" + groupId));
 
     }
 }
